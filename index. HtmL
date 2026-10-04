@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXA — Digital Products</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root{
+  --bg:#080808;
+  --bg2:#10100e;
+  --card:#151511;
+  --yellow:#ffc928;
+  --gold:#ffb700;
+  --text:#fffdf5;
+  --muted:#96958c;
+  --border:rgba(255,201,40,.15);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  background:
+    radial-gradient(circle at 80% 10%,rgba(255,193,7,.12),transparent 30%),
+    radial-gradient(circle at 10% 45%,rgba(255,193,7,.06),transparent 25%),
+    var(--bg);
+  color:var(--text);
+  font-family:Inter,Arial,sans-serif;
+  overflow-x:hidden;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar{
+  width:100%;
+  position:fixed;
+  top:0;
+  z-index:1000;
+  padding:20px 5%;
+  backdrop-filter:blur(18px);
+  background:rgba(8,8,8,.72);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+.nav{
+  max-width:1250px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:3px;
+}
+
+.logo span{
+  color:var(--yellow);
+}
+
+.nav-links{
+  display:flex;
+  gap:32px;
+  color:#bdbcb4;
+  font-size:14px;
+}
+
+.nav-links a:hover{
+  color:var(--yellow);
+}
+
+.cart-btn{
+  position:relative;
+  border:1px solid var(--border);
+  background:#11110f;
+  color:white;
+  padding:10px 16px;
+  border-radius:30px;
+}
+
+.cart-count{
+  position:absolute;
+  top:-7px;
+  right:-5px;
+  width:19px;
+  height:19px;
+  border-radius:50%;
+  background:var(--yellow);
+  color:#111;
+  font-size:11px;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+}
+
+/* ================= HERO ================= */
+
+.hero{
+  min-height:100vh;
+  max-width:1250px;
+  margin:auto;
+  padding:150px 5% 80px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  gap:50px;
+}
+
+.badge{
+  display:inline-flex;
+  padding:8px 14px;
+  border:1px solid rgba(255,201,40,.25);
+  border-radius:30px;
+  color:var(--yellow);
+  background:rgba(255,201,40,.06);
+  font-size:12px;
+  margin-bottom:25px;
+}
+
+.hero h1{
+  font-size:clamp(48px,6vw,82px);
+  line-height:.96;
+  letter-spacing:-4px;
+  max-width:700px;
+}
+
+.hero h1 span{
+  color:var(--yellow);
+  text-shadow:0 0 35px rgba(255,201,40,.35);
+}
+
+.hero p{
+  margin-top:28px;
+  max-width:570px;
+  color:var(--muted);
+  line-height:1.8;
+  font-size:16px;
+}
+
+.hero-buttons{
+  display:flex;
+  gap:14px;
+  margin-top:35px;
+}
+
+.btn{
+  padding:15px 24px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  font-weight:700;
+  transition:.3s;
+}
+
+.btn-primary{
+  background:linear-gradient(135deg,#ffe067,#ffb900);
+  color:#17130a;
+  box-shadow:0 10px 35px rgba(255,193,7,.18);
+}
+
+.btn-primary:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 45px rgba(255,193,7,.3);
+}
+
+.btn-dark{
+  background:#151511;
+  color:white;
+}
+
+.btn-dark:hover{
+  border-color:var(--yellow);
+}
+
+/* ================= 3D PRODUCT ================= */
+
+.scene{
+  height:550px;
+  display:grid;
+  place-items:center;
+  perspective:1300px;
+}
+
+.product-3d{
+  position:relative;
+  width:300px;
+  height:410px;
+  transform-style:preserve-3d;
+  transform:rotateY(-18deg) rotateX(7deg);
+  animation:float 5s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{
+    transform:rotateY(-18deg) rotateX(7deg) translateY(0);
+  }
+  50%{
+    transform:rotateY(-13deg) rotateX(5deg) translateY(-20px);
+  }
+}
+
+.book-front{
+  position:absolute;
+  inset:0;
+  border-radius:10px 18px 18px 10px;
+  overflow:hidden;
+  background:
+    linear-gradient(145deg,rgba(255,215,70,.95),rgba(181,119,0,.95)),
+    #dca900;
+  box-shadow:
+    35px 35px 60px rgba(0,0,0,.65),
+    0 0 60px rgba(255,193,7,.18);
+  transform:translateZ(32px);
+  border:2px solid rgba(255,226,102,.5);
+}
+
+.book-front:before{
+  content:"";
+  position:absolute;
+  inset:15px;
+  border:1px solid rgba(0,0,0,.28);
+  border-radius:5px;
+}
+
+.book-content{
+  position:absolute;
+  inset:45px 35px;
+  color:#15120a;
+}
+
+.book-content small{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:3px;
+}
+
+.book-content h3{
+  font-size:40px;
+  line-height:.95;
+  margin-top:40px;
+  letter-spacing:-2px;
+}
+
+.book-content p{
+  position:absolute;
+  bottom:5px;
+  font-size:11px;
+  font-weight:700;
+}
+
+.book-spine{
+  position:absolute;
+  width:65px;
+  height:410px;
+  left:-64px;
+  top:0;
+  transform-origin:right;
+  transform:rotateY(-90deg);
+  background:linear-gradient(90deg,#806000,#d59c00,#6e5100);
+  border-radius:8px 0 0 8px;
+}
+
+.book-pages{
+  position:absolute;
+  width:32px;
+  height:400px;
+  right:-31px;
+  top:5px;
+  transform-origin:left;
+  transform:rotateY(90deg);
+  background:repeating-linear-gradient(
+    90deg,#eee9d9 0,#eee9d9 2px,#c9c4b5 3px
+  );
+}
+
+.glow{
+  position:absolute;
+  width:380px;
+  height:150px;
+  bottom:20px;
+  background:rgba(255,193,7,.17);
+  filter:blur(70px);
+  border-radius:50%;
+}
+
+/* ================= SECTIONS ================= */
+
+section{
+  max-width:1250px;
+  margin:auto;
+  padding:100px 5%;
+}
+
+.section-heading{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  margin-bottom:45px;
+}
+
+.section-heading h2{
+  font-size:42px;
+  letter-spacing:-2px;
+}
+
+.section-heading p{
+  color:var(--muted);
+  max-width:450px;
+  line-height:1.6;
+}
+
+/* ================= PRODUCTS ================= */
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
+
+.product-card{
+  position:relative;
+  background:linear-gradient(145deg,#181814,#0e0e0c);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:14px;
+  transition:.4s;
+  overflow:hidden;
+}
+
+.product-card:hover{
+  transform:translateY(-9px) rotateX(1deg);
+  border-color:rgba(255,201,40,.45);
+  box-shadow:0 25px 60px rgba(0,0,0,.4);
+}
+
+.product-image{
+  height:270px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 50% 30%,rgba(255,215,60,.25),transparent 30%),
+    linear-gradient(145deg,#29261a,#0d0d0b);
+  perspective:700px;
+  overflow:hidden;
+}
+
+.mini-book{
+  width:150px;
+  height:200px;
+  background:linear-gradient(145deg,#ffd94a,#b77d00);
+  border-radius:5px 12px 12px 5px;
+  box-shadow:20px 25px 30px rgba(0,0,0,.6);
+  transform:rotateY(-18deg) rotateX(6deg);
+  transition:.5s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:#18140a;
+  padding:20px;
+  font-size:18px;
+  font-weight:900;
+}
+
+.product-card:hover .mini-book{
+  transform:rotateY(-25deg) rotateX(8deg) translateY(-10px) scale(1.04);
+}
+
+.product-info{
+  padding:20px 6px 6px;
+}
+
+.product-info h3{
+  font-size:18px;
+}
+
+.product-info p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+  margin:10px 0 18px;
+}
+
+.product-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.price{
+  color:var(--yellow);
+  font-size:21px;
+  font-weight:800;
+}
+
+.add{
+  border:0;
+  background:var(--yellow);
+  color:#15120a;
+  padding:10px 14px;
+  border-radius:9px;
+  font-weight:800;
+}
+
+/* ================= FEATURES ================= */
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.feature{
+  padding:30px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:linear-gradient(145deg,#151511,#0d0d0b);
+}
+
+.feature-icon{
+  width:45px;
+  height:45px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,201,40,.12);
+  color:var(--yellow);
+  font-size:21px;
+  margin-bottom:22px;
+}
+
+.feature h3{
+  margin-bottom:10px;
+}
+
+.feature p{
+  color:var(--muted);
+  line-height:1.7;
+  font-size:14px;
+}
+
+/* ================= CTA ================= */
+
+.cta{
+  margin:50px auto 100px;
+  max-width:1100px;
+  padding:80px 40px;
+  text-align:center;
+  border-radius:30px;
+  border:1px solid var(--border);
+  background:
+    radial-gradient(circle at center,rgba(255,193,7,.18),transparent 50%),
+    linear-gradient(145deg,#181710,#0d0d0b);
+}
+
+.cta h2{
+  font-size:48px;
+  letter-spacing:-2px;
+}
+
+.cta p{
+  max-width:600px;
+  margin:20px auto 30px;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+  border-top:1px solid rgba(255,255,255,.06);
+  padding:50px 5%;
+}
+
+.footer-inner{
+  max-width:1250px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  gap:30px;
+}
+
+footer p{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:12px;
+}
+
+.footer-links{
+  display:flex;
+  gap:25px;
+  color:#aaa99f;
+  font-size:13px;
+}
+
+/* ================= CART ================= */
+
+.cart-panel{
+  position:fixed;
+  z-index:2000;
+  top:0;
+  right:-420px;
+  width:400px;
+  max-width:90%;
+  height:100vh;
+  background:#11110e;
+  border-left:1px solid var(--border);
+  padding:30px;
+  transition:.4s;
+  box-shadow:-20px 0 60px rgba(0,0,0,.5);
+}
+
+.cart-panel.active{
+  right:0;
+}
+
+.cart-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.close{
+  background:none;
+  color:white;
+  border:0;
+  font-size:25px;
+}
+
+.cart-item{
+  padding:15px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;
+  justify-content:space-between;
+}
+
+.cart-total{
+  margin-top:30px;
+  display:flex;
+  justify-content:space-between;
+  font-size:20px;
+  font-weight:800;
+}
+
+.checkout{
+  width:100%;
+  margin-top:20px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px){
+
+  .nav-links{
+    display:none;
+  }
+
+  .hero{
+    grid-template-columns:1fr;
+    text-align:center;
+    padding-top:130px;
+  }
+
+  .hero p{
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .hero-buttons{
+    justify-content:center;
+  }
+
+  .scene{
+    height:450px;
+  }
+
+  .products,
+  .features{
+    grid-template-columns:1fr 1fr;
+  }
+
+}
+
+@media(max-width:600px){
+
+  .hero h1{
+    font-size:48px;
+  }
+
+  .section-heading{
+    display:block;
+  }
+
+  .section-heading p{
+    margin-top:15px;
+  }
+
+  .products,
+  .features{
+    grid-template-columns:1fr;
+  }
+
+  .product-3d{
+    transform:scale(.78) rotateY(-18deg) rotateX(7deg);
+  }
+
+  .hero-buttons{
+    flex-direction:column;
+  }
+
+  .footer-inner{
+    flex-direction:column;
+  }
+
+  .cta h2{
+    font-size:35px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="nav">
+
+    <a href="#" class="logo">NEXA<span>.</span></a>
+
+    <nav class="nav-links">
+      <a href="#shop">Shop</a>
+      <a href="#features">Why NEXA</a>
+      <a href="#about">About</a>
+      <a href="#support">Support</a>
+    </nav>
+
+    <button class="cart-btn" onclick="openCart()">
+      Cart
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+
+  </div>
+</header>
+
+
+<!-- HERO -->
+<main>
+
+<section class="hero">
+
+  <div>
+
+    <div class="badge">
+      PREMIUM DIGITAL PRODUCTS
+    </div>
+
+    <h1>
+      Digital tools for
+      <span>people who build.</span>
+    </h1>
+
+    <p>
+      Premium ebooks, templates, guides and digital resources
+      designed to help you work smarter, create faster and turn
+      ideas into something real.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#shop" class="btn btn-primary">
+        Explore Products
+      </a>
+
+      <a href="#features" class="btn btn-dark">
+        Why NEXA?
+      </a>
+    </div>
+
+  </div>
+
+
+  <!-- 3D HERO PRODUCT -->
+
+  <div class="scene">
+
+    <div class="glow"></div>
+
+    <div class="product-3d">
+
+      <div class="book-spine"></div>
+
+      <div class="book-front">
+
+        <div class="book-content">
+
+          <small>NEXA DIGITAL</small>
+
+          <h3>
+            THE<br>
+            AI<br>
+            FREELANCER
+          </h3>
+
+          <p>
+            500+ PROMPTS • 2026 EDITION
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="book-pages"></div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- PRODUCTS -->
+
+<section id="shop">
+
+  <div class="section-heading">
+
+    <div>
+      <div class="badge">THE COLLECTION</div>
+      <h2>Featured products</h2>
+    </div>
+
+    <p>
+      Practical digital products made to solve real problems —
+      instantly downloadable and ready to use.
+    </p>
+
+  </div>
+
+
+  <div class="products">
+
+    <!-- PRODUCT 1 -->
+
+    <article class="product-card">
+
+      <div class="product-image">
+
+        <div class="mini-book">
+          AI<br>FREELANCER
+        </div>
+
+      </div>
+
+      <div class="product-info">
+
+        <h3>The 2026 AI-Powered Freelancer</h3>
+
+        <p>
+          500+ practical AI prompts designed for freelancers,
+          creators and online entrepreneurs.
+        </p>
+
+        <div class="product-bottom">
+
+          <span class="price">$19</span>
+
+          <button
+            class="add"
+            onclick="addToCart('The 2026 AI-Powered Freelancer',19)">
+            Add to cart
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <!-- PRODUCT 2 -->
+
+    <article class="product-card">
+
+      <div class="product-image">
+
+        <div class="mini-book">
+          CREATOR<br>PLAYBOOK
+        </div>
+
+      </div>
+
+      <div class="product-info">
+
+        <h3>Creator Growth Playbook</h3>
+
+        <p>
+          A practical system for planning content,
+          growing an audience and building digital income.
+        </p>
+
+        <div class="product-bottom">
+
+          <span class="price">$15</span>
+
+          <button
+            class="add"
+            onclick="addToCart('Creator Growth Playbook',15)">
+            Add to cart
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <!-- PRODUCT 3 -->
+
+    <article class="product-card">
+
+      <div class="product-image">
+
+        <div class="mini-book">
+          DIGITAL<br>BUSINESS
+        </div>
+
+      </div>
+
+      <div class="product-info">
+
+        <h3>Digital Business Starter Kit</h3>
+
+        <p>
+          Templates, checklists and resources to launch
+          your first digital-product business.
+        </p>
+
+        <div class="product-bottom">
+
+          <span class="price">$24</span>
+
+          <button
+            class="add"
+            onclick="addToCart('Digital Business Starter Kit',24)">
+            Add to cart
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>
+
+
+<!-- FEATURES -->
+
+<section id="features">
+
+  <div class="section-heading">
+
+    <div>
+      <div class="badge">WHY NEXA</div>
+      <h2>Built for action.</h2>
+    </div>
+
+  </div>
+
+
+  <div class="features">
+
+    <div class="feature">
+
+      <div class="feature-icon">✦</div>
+
+      <h3>Instant Access</h3>
+
+      <p>
+        Get your digital product immediately after purchase.
+        No waiting. No shipping.
+      </p>
+
+    </div>
+
+
+    <div class="feature">
+
+      <div class="feature-icon">⚡</div>
+
+      <h3>Practical Resources</h3>
+
+      <p>
+        Every product is designed around real-world problems
+        instead of generic information.
+      </p>
+
+    </div>
+
+
+    <div class="feature">
+
+      <div class="feature-icon">◆</div>
+
+      <h3>Premium Quality</h3>
+
+      <p>
+        Carefully designed resources with clean layouts,
+        useful systems and actionable content.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- CTA -->
+
+<div class="cta" id="about">
+
+  <div class="badge">START BUILDING</div>
+
+  <h2>
+    Your next idea deserves better tools.
+  </h2>
+
+  <p>
+    Explore the NEXA collection and find digital resources
+    built to help you create, learn and grow.
+  </p>
+
+  <a href="#shop" class="btn btn-primary">
+    Browse the collection
+  </a>
+
+</div>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer id="support">
+
+  <div class="footer-inner">
+
+    <div>
+
+      <div class="logo">
+        NEXA<span>.</span>
+      </div>
+
+      <p>
+        Premium digital products for modern creators.
+      </p>
+
+    </div>
+
+    <div class="footer-links">
+
+      <a href="#">Terms</a>
+      <a href="#">Privacy</a>
+      <a href="#">Support</a>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+<!-- CART -->
+
+<aside class="cart-panel" id="cartPanel">
+
+  <div class="cart-header">
+
+    <h2>Your Cart</h2>
+
+    <button class="close" onclick="closeCart()">
+      ×
+    </button>
+
+  </div>
+
+  <div id="cartItems">
+    <p style="color:#888">
+      Your cart is empty.
+    </p>
+  </div>
+
+  <div class="cart-total">
+
+    <span>Total</span>
+    <span id="cartTotal">$0</span>
+
+  </div>
+
+  <button
+    class="btn btn-primary checkout"
+    onclick="checkout()">
+    Continue to Checkout
+  </button>
+
+</aside>
+
+
+<script>
+
+let cart = [];
+
+
+/* ADD TO CART */
+
+function addToCart(name,price){
+
+  cart.push({
+    name:name,
+    price:price
+  });
+
+  updateCart();
+
+  document
+    .getElementById("cartPanel")
+    .classList.add("active");
+}
+
+
+/* UPDATE CART */
+
+function updateCart(){
+
+  const count =
+    document.getElementById("cartCount");
+
+  count.innerText = cart.length;
+
+
+  const items =
+    document.getElementById("cartItems");
+
+  if(cart.length === 0){
+
+    items.innerHTML =
+      '<p style="color:#888">Your cart is empty.</p>';
+
+  }else{
+
+    items.innerHTML = "";
+
+    cart.forEach((item,index)=>{
+
+      items.innerHTML += `
+
+        <div class="cart-item">
+
+          <div>
+
+            <strong>${item.name}</strong>
+
+            <div style="
+              color:#ffc928;
+              margin-top:5px;
+              font-size:13px;
+            ">
+              $${item.price}
+            </div>
+
+          </div>
+
+          <button
+            onclick="removeItem(${index})"
+            style="
+              background:none;
+              border:0;
+              color:#777;
+              font-size:18px;
+            ">
+            ×
+          </button>
+
+        </div>
+
+      `;
+
+    });
+
+  }
+
+
+  const total =
+    cart.reduce(
+      (sum,item)=>sum + item.price,
+      0
+    );
+
+  document.getElementById("cartTotal")
+    .innerText = "$" + total;
+
+}
+
+
+/* REMOVE */
+
+function removeItem(index){
+
+  cart.splice(index,1);
+
+  updateCart();
+
+}
+
+
+/* CART OPEN */
+
+function openCart(){
+
+  document
+    .getElementById("cartPanel")
+    .classList.add("active");
+
+}
+
+
+/* CART CLOSE */
+
+function closeCart(){
+
+  document
+    .getElementById("cartPanel")
+    .classList.remove("active");
+
+}
+
+
+/* CHECKOUT */
+
+function checkout(){
+
+  if(cart.length === 0){
+
+    alert("Your cart is empty.");
+
+    return;
+
+  }
+
+  /*
+    এখানে তোমার Gumroad checkout link,
+    Stripe Checkout বা অন্য payment system
+    বসাতে পারবে।
+  */
+
+  alert(
+    "Checkout system ready to connect.\n\n" +
+    "Replace this function with your Gumroad/Stripe checkout link."
+  );
+
+}
+
+</script>
+
+</body>
+</html>
