@@ -358,18 +358,115 @@
       text-transform: uppercase;
       z-index: 12;
       white-space: nowrap;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
     }
 
     .message.goal {
       color: #dfffe8;
       border-color: rgba(109, 242, 161, 0.42);
       box-shadow: 0 0 20px rgba(109, 242, 161, 0.18);
+      animation: pulse-success 0.5s ease;
     }
 
     .message.save {
       color: #ffe9a9;
       border-color: rgba(255, 204, 51, 0.4);
       box-shadow: 0 0 18px rgba(255,204,51,0.18);
+      animation: pulse-warn 0.5s ease;
+    }
+
+    @keyframes pulse-success {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.08); }
+    }
+
+    @keyframes pulse-warn {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.06); }
+    }
+
+    .glow-effect {
+      position: absolute;
+      pointer-events: none;
+      border-radius: 50%;
+      z-index: 3;
+    }
+
+    .glow-goal {
+      width: 200px;
+      height: 200px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(109,242,161,0.18), transparent 70%);
+      animation: expand 0.6s ease-out forwards;
+    }
+
+    @keyframes expand {
+      from { 
+        width: 80px;
+        height: 80px;
+        opacity: 1;
+      }
+      to { 
+        width: 320px;
+        height: 320px;
+        opacity: 0;
+      }
+    }
+
+    .score-pop {
+      position: absolute;
+      font-weight: 900;
+      color: #6df2a1;
+      font-size: 24px;
+      z-index: 10;
+      pointer-events: none;
+      animation: pop-up 0.8s ease-out forwards;
+    }
+
+    @keyframes pop-up {
+      from { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      to { 
+        opacity: 0;
+        transform: translateY(-60px) scale(1.4);
+      }
+    }
+
+    .timer {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      background: rgba(255,204,51,0.12);
+      border: 1px solid rgba(255,204,51,0.28);
+      color: var(--gold);
+      font-size: 14px;
+      font-weight: 700;
+      z-index: 11;
+    }
+
+    .info-panel {
+      position: absolute;
+      bottom: 24px;
+      right: 16px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted);
+      font-size: 11px;
+      z-index: 10;
+      text-align: right;
     }
 
     @media (max-width: 720px) {
@@ -403,6 +500,16 @@
       .spot {
         left: 82px;
       }
+
+      .timer {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+
+      .info-panel {
+        font-size: 10px;
+        padding: 8px 12px;
+      }
     }
   </style>
 </head>
@@ -418,8 +525,8 @@
         <strong id="best">0</strong>
       </div>
       <div class="score-box">
-        <span>Shots</span>
-        <strong id="shots">0</strong>
+        <span>Accuracy</span>
+        <strong id="accuracy">0%</strong>
       </div>
     </div>
 
@@ -431,12 +538,18 @@
       </div>
       <div class="spot"></div>
 
+      <div class="timer" id="timer">Time: 0s</div>
+      <div class="info-panel">
+        <div>🎯 Click + Hold to Kick</div>
+        <div>⚽ Release to Shoot</div>
+      </div>
+
       <div class="aim-line" id="aimLine"></div>
       <div class="aim-dot" id="aimDot"></div>
       <div class="keeper" id="keeper"></div>
       <div class="ball" id="ball"></div>
 
-      <div class="message" id="message">Aim + hold to kick</div>
+      <div class="message" id="message">Click + Hold to Kick</div>
 
       <div class="power-panel">
         <div class="power-label">
@@ -456,17 +569,50 @@
     const keeper = document.getElementById('keeper');
     const scoreEl = document.getElementById('score');
     const bestEl = document.getElementById('best');
-    const shotsEl = document.getElementById('shots');
+    const accuracyEl = document.getElementById('accuracy');
     const powerFill = document.getElementById('powerFill');
     const powerValue = document.getElementById('powerValue');
     const aimLine = document.getElementById('aimLine');
     const aimDot = document.getElementById('aimDot');
     const message = document.getElementById('message');
+    const timerEl = document.getElementById('timer');
+
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(freq, duration, type = 'sine') {
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      osc.connect(gain);
+      gain.connect(audioContext.destination);
+      osc.frequency.value = freq;
+      osc.type = type;
+      gain.gain.setValueAtTime(0.1, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+      osc.start(audioContext.currentTime);
+      osc.stop(audioContext.currentTime + duration);
+    }
+
+    function playKickSound() {
+      playSound(80, 0.15, 'sine');
+      setTimeout(() => playSound(120, 0.12, 'sine'), 50);
+    }
+
+    function playGoalSound() {
+      playSound(600, 0.1);
+      setTimeout(() => playSound(800, 0.15), 100);
+      setTimeout(() => playSound(1000, 0.2), 200);
+    }
+
+    function playSaveSound() {
+      playSound(200, 0.08);
+      setTimeout(() => playSound(150, 0.1), 80);
+    }
 
     const state = {
       score: 0,
       best: 0,
       shots: 0,
+      goals: 0,
       charging: false,
       power: 0,
       ballX: 112,
@@ -477,7 +623,8 @@
       pointerX: 0,
       pointerY: 0,
       lastShot: 0,
-      swing: 0
+      gameTime: 0,
+      startTime: Date.now()
     };
 
     function clamp(value, min, max) {
@@ -487,9 +634,15 @@
     function updateHud() {
       scoreEl.textContent = state.score;
       bestEl.textContent = state.best;
-      shotsEl.textContent = state.shots;
+      const accuracy = state.shots > 0 ? Math.round((state.goals / state.shots) * 100) : 0;
+      accuracyEl.textContent = accuracy + '%';
       powerValue.textContent = Math.round(state.power * 100) + '%';
       powerFill.style.width = (state.power * 100) + '%';
+    }
+
+    function updateTimer() {
+      state.gameTime = Math.floor((Date.now() - state.startTime) / 1000);
+      timerEl.textContent = 'Time: ' + state.gameTime + 's';
     }
 
     function updateAimIndicator() {
@@ -534,6 +687,23 @@
       if (type) message.classList.add(type);
     }
 
+    function createScorePop(x, y, text) {
+      const pop = document.createElement('div');
+      pop.className = 'score-pop';
+      pop.textContent = text;
+      pop.style.left = x + 'px';
+      pop.style.top = y + 'px';
+      field.appendChild(pop);
+      setTimeout(() => pop.remove(), 800);
+    }
+
+    function createGlowEffect() {
+      const glow = document.createElement('div');
+      glow.className = 'glow-effect glow-goal';
+      field.appendChild(glow);
+      setTimeout(() => glow.remove(), 600);
+    }
+
     function onPointerMove(event) {
       const rect = field.getBoundingClientRect();
       state.pointerX = event.clientX - rect.left;
@@ -565,6 +735,8 @@
       state.shots += 1;
       updateHud();
 
+      playKickSound();
+
       const dx = state.pointerX - state.ballX;
       const dy = state.pointerY - state.ballY;
       const distance = Math.hypot(dx, dy) || 1;
@@ -573,7 +745,7 @@
       state.vx = (dx / distance) * force;
       state.vy = (dy / distance) * force;
 
-      setMessage('Shot taken!', '');
+      setMessage('🎯 Shot taken!', '');
       updateAimIndicator();
     }
 
@@ -585,18 +757,24 @@
 
       if (result === 'goal') {
         state.score += 1;
+        state.goals += 1;
         state.best = Math.max(state.best, state.score);
-        setMessage('GOAL! Brilliant finish!', 'goal');
+        setMessage('⚽ GOAL! Brilliant! ⚽', 'goal');
+        playGoalSound();
+        createGlowEffect();
+        createScorePop(state.ballX - 20, state.ballY - 40, '+1 GOAL');
       } else {
-        setMessage('Saved by the keeper!', 'save');
+        setMessage('🧤 Saved by the keeper!', 'save');
+        playSaveSound();
+        createScorePop(state.ballX + 40, state.ballY - 40, 'SAVED');
       }
 
       updateHud();
 
       setTimeout(() => {
         resetBall();
-        setMessage('Aim + hold to kick');
-      }, 900);
+        setMessage('Click + Hold to Kick');
+      }, 1100);
     }
 
     function updateGoalkeeper(time) {
@@ -611,6 +789,7 @@
     function animateFrame(time) {
       const rect = field.getBoundingClientRect();
       updateGoalkeeper(time);
+      updateTimer();
 
       if (state.activeShot) {
         state.ballX += state.vx;
@@ -623,11 +802,11 @@
           state.vx = 0;
           state.vy = 0;
           state.activeShot = false;
-          setMessage('Off target. Try again!', '');
+          setMessage('❌ Off target. Try again!', '');
           setTimeout(() => {
             resetBall();
-            setMessage('Aim + hold to kick');
-          }, 500);
+            setMessage('Click + Hold to Kick');
+          }, 600);
         }
       }
 
@@ -642,7 +821,6 @@
       const goalBottom = rect.height / 2 + 110;
       const keeperTop = parseFloat(keeper.style.top || (rect.height / 2) + 'px');
       const keeperCenter = keeperTop + 29;
-      const goalX = rect.width - 24;
 
       if (state.activeShot && state.ballX > rect.width - 40 && state.ballY > goalTop && state.ballY < goalBottom) {
         const closeToKeeper = Math.abs(state.ballY - keeperCenter) < 28;
@@ -653,7 +831,7 @@
         }
       }
 
-      if (!state.activeShot && !state.charging && !state.lastShot) {
+      if (!state.activeShot && !state.charging) {
         updateAimIndicator();
       }
 
@@ -685,6 +863,7 @@
     state.pointerY = rect.height / 2;
     resetBall();
     updateHud();
+    updateTimer();
     updateAimIndicator();
     requestAnimationFrame(animateFrame);
   </script>
